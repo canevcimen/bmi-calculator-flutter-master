@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'constants.dart';
 class ReusableCardColumn extends StatelessWidget {
 
   ReusableCardColumn({required this.fontIcon,required this.genderText});
@@ -17,7 +17,7 @@ class ReusableCardColumn extends StatelessWidget {
         SizedBox(
           height: 15.0,
         ),
-        Text(genderText, style: TextStyle(fontSize: 18.0,color: Color(0xFF8D8E98),),)
+        Text(genderText, style: kLabelTextStyle ),
       ],
     );
   }
