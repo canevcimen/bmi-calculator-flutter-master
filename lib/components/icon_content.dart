@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'constants.dart';
+import '../constants.dart';
 class ReusableCardColumn extends StatelessWidget {
 
   ReusableCardColumn({required this.fontIcon,required this.genderText});

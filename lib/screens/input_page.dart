@@ -1,8 +1,13 @@
+import 'package:bmi_calculator/screens/results_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'icon_content.dart';
-import 'reusable_card.dart';
-import 'constants.dart';
+import '../components/icon_content.dart';
+import '../components/reusable_card.dart';
+import '../constants.dart';
+import '../components/round_icon_button.dart';
+import '../components/bottom_button.dart';
+import 'package:bmi_calculator/calculator_brain.dart';
 
 enum Gender {
   male,
@@ -90,18 +95,23 @@ class _InputPageState extends State<InputPage> {
                   ),
                   SliderTheme(
                     data: SliderTheme.of(context).copyWith(
-                      thumbColor: Color(0xFFEB1555),  // yuvarlağın rengi
-                      thumbShape: RoundSliderThumbShape(enabledThumbRadius: 15.0), //yuvarlağın büyüklüğü
-                      overlayShape: RoundSliderOverlayShape(overlayRadius: 30.0), // yuvarlağa tıklayıp sağ sol yaptığımızdaki boyutu
-                      overlayColor: Color(0x29EB1555), // yuvarlağı hareket ettirince transparan içindeki renk
+                      thumbColor: Color(0xFFEB1555), // yuvarlağın rengi
+                      thumbShape: RoundSliderThumbShape(
+                          enabledThumbRadius: 15.0), //yuvarlağın büyüklüğü
+                      overlayShape: RoundSliderOverlayShape(
+                          overlayRadius:
+                              30.0), // yuvarlağa tıklayıp sağ sol yaptığımızdaki boyutu
+                      overlayColor: Color(
+                          0x29EB1555), // yuvarlağı hareket ettirince transparan içindeki renk
                       inactiveTrackColor: Color(0xFF8E8D98),
-                      activeTrackColor: Colors.white, //active ve inactive slider rengini değiştirmek için kullan
+                      activeTrackColor: Colors
+                          .white, //active ve inactive slider rengini değiştirmek için kullan
                     ),
                     child: Slider(
                       value: height.toDouble(),
                       min: 100,
                       max: 260,
-                      onChanged: (double newValue){
+                      onChanged: (double newValue) {
                         setState(() {
                           height = newValue.round();
                         });
@@ -121,25 +131,38 @@ class _InputPageState extends State<InputPage> {
                     cardChild: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Text('WEIGHT', style: kLabelTextStyle,),
-                        Text(weight.toString(),style: kNumberTextStyle,),
+                        Text(
+                          'WEIGHT',
+                          style: kLabelTextStyle,
+                        ),
+                        Text(
+                          weight.toString(),
+                          style: kNumberTextStyle,
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            RoundIconButton(FontAwesomeIcons.minus,(){
-                              setState(() {
-                                weight--;
-                              });
-                            },),
-                            SizedBox(width: 10.0,),
-                            RoundIconButton(FontAwesomeIcons.plus,(){
-                              setState(() {
-                                weight++;
-                              });
-                            },),
+                            RoundIconButton(
+                              FontAwesomeIcons.minus,
+                              () {
+                                setState(() {
+                                  weight--;
+                                });
+                              },
+                            ),
+                            SizedBox(
+                              width: 10.0,
+                            ),
+                            RoundIconButton(
+                              FontAwesomeIcons.plus,
+                              () {
+                                setState(() {
+                                  weight++;
+                                });
+                              },
+                            ),
                           ],
                         ),
-
                       ],
                     ),
                   ),
@@ -150,22 +173,36 @@ class _InputPageState extends State<InputPage> {
                     cardChild: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Text('AGE',style: kLabelTextStyle,),
-                        Text(age.toString(),style: kNumberTextStyle,),
+                        Text(
+                          'AGE',
+                          style: kLabelTextStyle,
+                        ),
+                        Text(
+                          age.toString(),
+                          style: kNumberTextStyle,
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            RoundIconButton(FontAwesomeIcons.minus,(){
-                              setState(() {
-                                age--;
-                              });
-                            },),
-                            SizedBox(width: 10.0,),
-                            RoundIconButton(FontAwesomeIcons.plus,(){
-                              setState(() {
-                                age++;
-                              });
-                            },),
+                            RoundIconButton(
+                              FontAwesomeIcons.minus,
+                              () {
+                                setState(() {
+                                  age--;
+                                });
+                              },
+                            ),
+                            SizedBox(
+                              width: 10.0,
+                            ),
+                            RoundIconButton(
+                              FontAwesomeIcons.plus,
+                              () {
+                                setState(() {
+                                  age++;
+                                });
+                              },
+                            ),
                           ],
                         ),
                       ],
@@ -175,38 +212,24 @@ class _InputPageState extends State<InputPage> {
               ],
             ),
           ),
-          Container(
-            color: kBottomContainerColour,
-            margin: EdgeInsets.only(top: 10.0),
-            width: double.infinity,
-            height: kBottomContainerHeight,
-          )
+          BottomButton(
+            onTap: () {
+              CalculatorBrain calc = CalculatorBrain(height: height, weight: weight);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) {
+                  return ResultPage(
+                    bmiResult: calc.calcuateBMI(),
+                    resultText: calc.getResult(),
+                    interpretation: calc.getInterpretation(),
+                  );
+                }),
+              );
+            },
+            buttonName: 'CALCULATE',
+          ),
         ],
       ),
-    );
-  }
-}
-
-
-class RoundIconButton extends StatelessWidget {
-
-  RoundIconButton(@required this.icon, @required this.onPressed);
-
-  final IconData icon;
-  final VoidCallback? onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return RawMaterialButton(
-      onPressed: onPressed,
-      child: Icon(icon),
-      elevation: 0.0,
-      constraints: BoxConstraints.tightFor(
-        width: 56.0,
-        height: 56.0,
-      ),
-      shape: CircleBorder(),
-      fillColor: Color(0xFF4C4F5E),
     );
   }
 }
